@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPL CodeCraft & BugSlayer Arena</title>
+    <!-- CSS Utama -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Tailwind CSS CDN & Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="config.js"></script>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Fira Code & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-vscode-accent selection:text-white">
+
+    <!-- TOP IDE TITLE BAR -->
+    <header class="bg-[#181818] border-b border-[#2d2d2d] sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between">
+            
+            <!-- Window Controls & Title -->
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-1.5">
+                    <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                    <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                </div>
+                <div class="flex items-center space-x-2 text-xs code-font bg-[#2d2d2d] px-3 py-1 rounded text-slate-300 border border-slate-700">
+                    <i class="fa-solid fa-laptop-code text-vscode-green"></i>
+                    <span>workspace://RPL-CodeCraft-Arena/main.js</span>
+                </div>
+            </div>
+
+            <!-- Player XP & Rank Status Bar -->
+            <div class="flex items-center space-x-4">
+                <div class="hidden sm:flex items-center space-x-2 bg-[#252526] px-3 py-1.5 rounded-lg border border-slate-700 text-xs">
+                    <span class="text-slate-400">RANK:</span>
+                    <span id="playerRankBadge" class="code-font font-bold text-vscode-yellow">Junior Dev (Lvl 1)</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-[#252526] px-3 py-1.5 rounded-lg border border-slate-700 text-xs">
+                    <span class="text-slate-400">XP:</span>
+                    <span id="playerXpDisplay" class="code-font font-bold text-vscode-green">0 / 100</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION TABS -->
+        <div class="bg-[#2d2d2d]/60 border-t border-[#3f3f46] overflow-x-auto flex">
+            <button onclick="switchTab('battle')" id="tabBtn-battle" class="px-4 py-2 text-xs code-font font-semibold flex items-center space-x-2 bg-[#1e1e1e] text-vscode-green border-t-2 border-vscode-green transition">
+                <i class="fa-solid fa-code"></i>
+                <span>1. CODE & LOGIC BATTLE</span>
+            </button>
+            <button onclick="switchTab('legacy')" id="tabBtn-legacy" class="px-4 py-2 text-xs code-font font-semibold flex items-center space-x-2 text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-bug-slash"></i>
+                <span>2. LEGACY BUGSLAYER</span>
+            </button>
+            <button onclick="switchTab('git')" id="tabBtn-git" class="px-4 py-2 text-xs code-font font-semibold flex items-center space-x-2 text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-code-merge"></i>
+                <span>3. GIT CONFLICT ARENA</span>
+            </button>
+            <button onclick="switchTab('regex')" id="tabBtn-regex" class="px-4 py-2 text-xs code-font font-semibold flex items-center space-x-2 text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-database"></i>
+                <span>4. REGEX & SQL MASTER</span>
+            </button>
+            <button onclick="switchTab('terminal')" id="tabBtn-terminal" class="px-4 py-2 text-xs code-font font-semibold flex items-center space-x-2 text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-terminal"></i>
+                <span>5. HACKER TERMINAL CLI</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN IDE CONTENT WORKSPACE -->
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+
+        <!-- FEATURE 1: CODE & LOGIC BATTLE ARENA -->
+        <div id="tabContent-battle" class="space-y-6">
+            <div class="bg-vscode-sidebar border border-vscode-border rounded-xl p-6 shadow-ide space-y-6">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-vscode-border pb-4">
+                    <div>
+                        <span class="text-[10px] code-font bg-vscode-accent/20 text-vscode-blue px-2.5 py-1 rounded border border-vscode-accent/40 font-bold uppercase">Algoritma & Evaluator Engine</span>
+                        <h2 class="text-xl font-bold text-white mt-1">Code & Logic Battle Arena</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Selesaikan tantangan koding dengan menulis fungsi JavaScript yang valid dan jalankan test case langsung!</p>
+                    </div>
+                    <div>
+                        <button onclick="loadNextBattleChallenge()" class="px-3 py-1.5 rounded bg-[#333] hover:bg-[#444] text-xs code-font text-slate-300 border border-slate-600">
+                            <i class="fa-solid fa-rotate-right mr-1"></i> Soal Lain
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-[#1e1e1e] border border-vscode-border p-4 rounded-lg space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span id="battleProblemTitle" class="code-font text-sm font-bold text-vscode-yellow">Tantangan #1: Cek Angka Genap / Ganjil</span>
+                        <span id="battleDifficulty" class="text-[10px] code-font px-2 py-0.5 rounded bg-green-500/20 text-vscode-green border border-green-500/30">MUDAH</span>
+                    </div>
+                    <p id="battleProblemDesc" class="text-xs text-slate-300 leading-relaxed">Buatlah fungsi JavaScript bernama <code class="text-vscode-green code-font">isEven(n)</code> yang mengembalikan nilai <code class="text-vscode-yellow code-font">true</code> jika angka genap, dan <code class="text-vscode-yellow code-font">false</code> jika ganjil.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-7 space-y-3">
+                        <div class="flex items-center justify-between text-xs code-font text-slate-400 bg-[#181818] px-3 py-2 rounded-t-lg border-t border-x border-vscode-border">
+                            <span><i class="fa-brands fa-js text-vscode-yellow mr-1"></i> solution.js</span>
+                            <span>JavaScript (ES6)</span>
+                        </div>
+                        <textarea id="battleCodeEditor" rows="10" class="w-full bg-[#1e1e1e] border border-vscode-border rounded-b-lg p-4 code-font text-xs text-vscode-green outline-none focus:border-vscode-accent leading-relaxed resize-none">function isEven(n) {
+    return n % 2 === 0;
+}</textarea>
+                        <button onclick="runBattleCode()" class="w-full py-3 rounded-lg bg-vscode-accent hover:bg-blue-600 code-font font-bold text-xs text-white shadow-glow-blue transition">
+                            <i class="fa-solid fa-play mr-1.5"></i> RUN TEST CASES
+                        </button>
+                    </div>
+
+                    <div class="lg:col-span-5 space-y-3 flex flex-col">
+                        <div class="flex items-center justify-between text-xs code-font text-slate-400 bg-[#181818] px-3 py-2 rounded-t-lg border-t border-x border-vscode-border">
+                            <span><i class="fa-solid fa-terminal text-vscode-purple mr-1"></i> Test Results & Console</span>
+                            <span id="consoleStatus" class="text-slate-500">Idle</span>
+                        </div>
+                        <div id="battleConsoleOutput" class="flex-grow bg-[#1e1e1e] border border-vscode-border rounded-b-lg p-4 code-font text-xs text-slate-300 space-y-2 min-h-[220px] max-h-[280px] overflow-y-auto">
+                            <p class="text-slate-500">// Klik "Run Test Cases" untuk mengevaluasi kode Anda...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEATURE 2: LEGACY CODE NIGHTMARE SIMULATOR -->
+        <div id="tabContent-legacy" class="hidden space-y-6">
+            <div class="bg-vscode-sidebar border border-vscode-border rounded-xl p-6 shadow-ide space-y-6">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-vscode-border pb-4">
+                    <div>
+                        <span class="text-[10px] code-font bg-red-500/20 text-red-400 px-2.5 py-1 rounded border border-red-500/40 font-bold uppercase">Emergency 500 Error Fix</span>
+                        <h2 class="text-xl font-bold text-white mt-1">The Legacy Code Nightmare Simulator</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Perbaiki spaghetti code yang error sebelum CPU/Memory overload dan server down!</p>
+                    </div>
+                    <div class="flex items-center space-x-4 bg-[#181818] px-4 py-2 rounded-lg border border-vscode-border text-xs code-font">
+                        <div>CPU: <span id="legacyCpuMeter" class="text-vscode-green font-bold">12%</span></div>
+                        <div>MEMORY: <span id="legacyMemMeter" class="text-vscode-green font-bold">340MB</span></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-8 space-y-3">
+                        <div class="flex items-center justify-between text-xs code-font text-slate-400 bg-[#181818] px-3 py-2 rounded-t-lg border-t border-x border-vscode-border">
+                            <span><i class="fa-solid fa-triangle-exclamation text-red-400 mr-1"></i> legacy_monolith_spaghetti.php</span>
+                            <span id="legacyTimerDisplay" class="text-red-400 font-bold">01:00</span>
+                        </div>
+                        <div id="legacyCodeBox" class="bg-[#1e1e1e] border border-red-500/40 rounded-b-lg p-4 code-font text-xs text-slate-300 space-y-3">
+                            <p class="text-slate-500">// Klik tombol mulai darurat di bawah untuk memunculkan kode error.</p>
+                        </div>
+                        <button onclick="startLegacyChallenge()" id="startLegacyBtn" class="w-full py-3 rounded-lg bg-red-600 hover:bg-red-500 code-font font-bold text-xs text-white transition shadow-lg">
+                            <i class="fa-solid fa-power-off mr-1"></i> MULAI DARURAT SERVER (START)
+                        </button>
+                    </div>
+
+                    <div class="lg:col-span-4 space-y-3 flex flex-col">
+                        <div class="flex items-center justify-between text-xs code-font text-slate-400 bg-[#181818] px-3 py-2 rounded-t-lg border-t border-x border-vscode-border">
+                            <span><i class="fa-solid fa-server text-vscode-orange mr-1"></i> Error Logs</span>
+                        </div>
+                        <div id="legacyLogsBox" class="flex-grow bg-[#1e1e1e] border border-vscode-border rounded-b-lg p-4 code-font text-xs text-red-400 space-y-1.5 min-h-[220px] max-h-[280px] overflow-y-auto">
+                            <p class="text-slate-500">// Menunggu inisialisasi server crash...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEATURE 3: GIT COMMIT MESSAGE & MERGE CONFLICT -->
+        <div id="tabContent-git" class="hidden space-y-6">
+            <div class="bg-vscode-sidebar border border-vscode-border rounded-xl p-6 shadow-ide space-y-6">
+                <div class="border-b border-vscode-border pb-4">
+                    <span class="text-[10px] code-font bg-vscode-purple/20 text-vscode-purple px-2.5 py-1 rounded border border-vscode-purple/40 font-bold uppercase">Version Control Simulator</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Git Commit Message & Merge Conflict Simulator</h2>
+                    <p class="text-xs text-slate-400 mt-1">Selesaikan merge conflict di branch <code class="code-font text-vscode-yellow">feature/login-fix</code> sebelum melakukan merge ke <code class="code-font text-vscode-green">main</code>.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-xs code-font text-slate-400 bg-[#181818] px-3 py-2 rounded-t-lg border-t border-x border-vscode-border">
+                            <span><i class="fa-solid fa-code-merge text-vscode-yellow mr-1"></i> Conflict File (app.js)</span>
+                            <span class="text-red-400 font-bold">CONFLICT (content)</span>
+                        </div>
+                        <textarea id="gitConflictEditor" rows="10" class="w-full bg-[#1e1e1e] border border-red-500/50 rounded-b-lg p-4 code-font text-xs text-slate-200 outline-none focus:border-vscode-accent leading-relaxed resize-none"><<<<<<< HEAD
+const apiUrl = "https://api.production.com/v1";
+=======
+const apiUrl = "https://api.staging.internal/v2";
+>>>>>>> feature/login-fix</textarea>
+                    </div>
+
+                    <div class="space-y-4 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="text-xs code-font text-slate-400 font-bold">Pilih Aksi Resolusi Conflict:</div>
+                            <button onclick="resolveGitConflict('head')" class="w-full text-left p-3 rounded-lg bg-[#1e1e1e] border border-vscode-border hover:border-vscode-green transition space-y-1">
+                                <div class="code-font text-xs font-bold text-vscode-green">1. Keep Incoming / HEAD (Production)</div>
+                                <div class="text-[10px] text-slate-400">Gunakan API URL Production dan buang branch lain.</div>
+                            </button>
+                            <button onclick="resolveGitConflict('merge')" class="w-full text-left p-3 rounded-lg bg-[#1e1e1e] border border-vscode-border hover:border-vscode-yellow transition space-y-1">
+                                <div class="code-font text-xs font-bold text-vscode-yellow">2. Keep Staging Branch</div>
+                                <div class="text-[10px] text-slate-400">Gunakan API URL Staging untuk pengujian lanjutan.</div>
+                            </button>
+                            <button onclick="resolveGitConflict('custom')" class="w-full text-left p-3 rounded-lg bg-[#1e1e1e] border border-vscode-border hover:border-vscode-blue transition space-y-1">
+                                <div class="code-font text-xs font-bold text-vscode-blue">3. Clean & Merge Both</div>
+                                <div class="text-[10px] text-slate-400">Gabungkan variabel dengan konfigurasi env dinamis.</div>
+                            </button>
+                        </div>
+
+                        <div id="gitResultBox" class="p-4 rounded-lg bg-[#1e1e1e] border border-vscode-border text-xs code-font text-slate-400 text-center">
+                            Menunggu resolusi conflict...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEATURE 4: REGEX & SQL QUERY MASTER CHALLENGE -->
+        <div id="tabContent-regex" class="hidden space-y-6">
+            <div class="bg-vscode-sidebar border border-vscode-border rounded-xl p-6 shadow-ide space-y-6">
+                <div class="border-b border-vscode-border pb-4">
+                    <span class="text-[10px] code-font bg-vscode-green/20 text-vscode-green px-2.5 py-1 rounded border border-vscode-green/40 font-bold uppercase">Database & Pattern Matching</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Regex & SQL Query Master Challenge</h2>
+                    <p class="text-xs text-slate-400 mt-1">Tulis query SQL yang tepat untuk mengambil data siswa RPL tanpa melakukan <code class="code-font text-red-400">DROP TABLE</code>!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                    <div class="md:col-span-6 space-y-3">
+                        <div class="text-xs code-font text-slate-400">Soal SQL:</div>
+                        <div class="bg-[#1e1e1e] border border-vscode-border p-4 rounded-lg text-xs text-slate-200 code-font">
+                            Tampilkan seluruh nama siswa dari tabel <code class="text-vscode-yellow">tb_siswa</code> yang kelasnya adalah <code class="text-vscode-green">'RPL 1'</code>.
+                        </div>
+
+                        <div class="text-xs code-font text-slate-400">SQL Query Editor:</div>
+                        <input type="text" id="sqlQueryInput" placeholder="SELECT * FROM tb_siswa WHERE ..." class="w-full bg-[#1e1e1e] border border-vscode-border rounded-lg p-3 code-font text-xs text-vscode-green outline-none focus:border-vscode-accent">
+                        
+                        <button onclick="runSqlQuery()" class="w-full py-3 rounded-lg bg-vscode-accent code-font font-bold text-xs text-white shadow-glow-blue">
+                            EXECUTE QUERY (<code class="code-font">RUN</code>)
+                        </button>
+                    </div>
+
+                    <div class="md:col-span-6 space-y-3 flex flex-col">
+                        <div class="text-xs code-font text-slate-400">Database Result Table:</div>
+                        <div id="sqlResultBox" class="flex-grow bg-[#1e1e1e] border border-vscode-border rounded-lg p-4 code-font text-xs text-slate-300 min-h-[160px] flex items-center justify-center text-slate-500">
+                            Belum ada query yang dieksekusi.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FEATURE 5: CYBER HACKER & TERMINAL CLI SIMULATOR -->
+        <div id="tabContent-terminal" class="hidden space-y-6">
+            <div class="bg-vscode-sidebar border border-vscode-border rounded-xl p-6 shadow-ide space-y-6">
+                <div class="border-b border-vscode-border pb-4">
+                    <span class="text-[10px] code-font bg-matrix-neon/20 text-matrix-neon px-2.5 py-1 rounded border border-matrix-neon/40 font-bold uppercase">Interactive CLI</span>
+                    <h2 class="text-xl font-bold text-white mt-1">Cyber Hacker & Terminal CLI Simulator</h2>
+                    <p class="text-xs text-slate-400 mt-1">Ketik perintah seperti <code class="code-font text-vscode-green">help</code>, <code class="code-font text-vscode-green">git status</code>, <code class="code-font text-vscode-green">npm install</code>, atau <code class="code-font text-vscode-green">hack_mainframe</code>.</p>
+                </div>
+
+                <div class="bg-[#0a0a0a] border border-matrix-neon/40 rounded-xl p-4 code-font text-xs text-matrix-neon shadow-[0_0_20px_rgba(0,255,102,0.15)] space-y-3">
+                    <div id="terminalOutput" class="space-y-1.5 max-h-[320px] overflow-y-auto">
+                        <p class="text-slate-500">RPL CodeCraft Terminal v2.6.0 (x86_64-pc-windows-msvc)</p>
+                        <p class="text-slate-500">Ketik 'help' untuk melihat daftar perintah yang tersedia.</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2 pt-2 border-t border-slate-800">
+                        <span class="text-vscode-green font-bold">root@rpl-craft:~$</span>
+                        <input type="text" id="terminalInput" onkeydown="handleTerminalInput(event)" placeholder="Ketik perintah di sini..." class="w-full bg-transparent border-none outline-none text-matrix-neon code-font text-xs">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#181818] border-t border-[#2d2d2d] py-4 mt-12 text-center text-xs code-font text-slate-500">
+        <p>RPL CODECRAFT & BUGSLAYER ARENA © 2026 — ALL RIGHTS RESERVED FOR REKAYASA PERANGKAT LUNAK</p>
+    </footer>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 bg-[#252526] border border-vscode-border text-white px-4 py-3 rounded-lg shadow-2xl flex items-center space-x-3 translate-y-24 opacity-0 transition-all duration-300 z-50 pointer-events-none text-xs code-font font-bold">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-vscode-green text-base"></i>
+        <span id="toastMessage">Berhasil!</span>
+    </div>
+
+    <!-- Hubungkan Script Utama di Bawah Body -->
+    <script src="sript.js"></script>
+</body>
+</html>
